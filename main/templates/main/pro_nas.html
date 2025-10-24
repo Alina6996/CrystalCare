@@ -1,0 +1,77 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="about-pro_nas" style="background-image: url('/media/products/pro_nas.jpg');">
+    <div class="pro_nas-text">
+        <h1>Про нас</h1>
+        <p class="subtitle">
+            Crystal Care — це простір, де кожен може знайти свою індивідуальність
+            та підкреслити природну красу. Ми працюємо з найкращими брендами, щоб ви отримували лише якісні та безпечні продукти.
+        </p>
+    </div>
+</section>
+
+<section class="mission">
+    <h2>Наша місія</h2>
+    <p>
+        Ми надихаємо бути впевненими у собі,
+        адже краса — це гармонія зовнішнього і внутрішнього світу.
+        Crystal Care пропонує продукцію, яка поєднує інновації, стиль і доступність.
+    </p>
+</section>
+
+<section class="reviews">
+    <h2>Відгуки наших клієнтів</h2>
+    <p class="subtitle">Ми цінуємо кожного покупця та їхню думку</p>
+
+    <table class="reviews-table">
+        <thead>
+            <tr>
+                <th>Ім’я</th>
+                <th>Відгук</th>
+                <th>Оцінка</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Аліна</td>
+                <td>Косметика супер! Дуже задоволена якістю та швидкою доставкою.</td>
+                <td>⭐⭐⭐⭐⭐</td>
+            </tr>
+            <tr>
+                <td>Анастасія</td>
+                <td>Замовляла кілька разів, завжди все приходить гарно запаковане.</td>
+                <td>⭐⭐⭐⭐</td>
+            </tr>
+            <tr>
+                <td>Кристина</td>
+                <td>Дуже подобається вибір! Знайшла улюблену помаду.</td>
+                <td>⭐⭐⭐⭐⭐</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<!-- Команда -->
+<section class="team">
+    <h2>Наша команда</h2>
+    <p class="subtitle">Ми працюємо разом, щоб надихати вас на красу та впевненість</p>
+
+    <div class="team-cards">
+        <div class="team-card">
+            <div class="team-icon">
+                <img src="{% static 'icons/girl.png' %}" alt="Аліна">
+            </div>
+            <h3>Аліна</h3>
+            <p>Засновник та керівник</p>
+        </div>
+
+        <div class="team-card">
+            <div class="team-icon">
+                <img src="{% static 'icons/working.png' %}" alt="Олександр">
+            </div>
+            <h3>Олександр</h3>
+            <p>Керівник відділу продажів</p>
+        </div>
+{% endblock %}

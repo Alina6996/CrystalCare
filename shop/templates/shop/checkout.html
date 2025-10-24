@@ -1,0 +1,69 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<section
+        style="max-width:650px; margin:60px auto; padding:40px; background-color:#fff; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.08); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align:center;">
+
+    <!-- Заголовок -->
+    <h1 style="color:#b30000; font-size:1.8rem; margin-bottom:15px;">Оформлення замовлення</h1>
+    <p style="font-size:1rem; color:#555; margin-bottom:35px;">
+        Загальна сума: <strong>{{ total_price }} грн</strong>
+    </p>
+
+    <!-- Форма замовлення -->
+    <form method="POST" style="display:flex; flex-direction:column; gap:20px;">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Ім'я та прізвище отримувача" required
+               style="padding:14px; border-radius:12px; border:1px solid #ddd; font-size:16px; transition:0.3s; width:100%;"
+               onfocus="this.style.borderColor='#b30000'; this.style.boxShadow='0 0 10px rgba(179,0,0,0.2)';"
+               onblur="this.style.borderColor='#ddd'; this.style.boxShadow='none';">
+        <input type="tel" name="phone" placeholder="Телефон" required
+               style="padding:14px; border-radius:12px; border:1px solid #ddd; font-size:16px; transition:0.3s; width:100%;"
+               onfocus="this.style.borderColor='#b30000'; this.style.boxShadow='0 0 10px rgba(179,0,0,0.2)';"
+               onblur="this.style.borderColor='#ddd'; this.style.boxShadow='none';">
+        <input type="text" name="address" placeholder="Місто" required
+               style="padding:14px; border-radius:12px; border:1px solid #ddd; font-size:16px; transition:0.3s; width:100%;"
+               onfocus="this.style.borderColor='#b30000'; this.style.boxShadow='0 0 10px rgba(179,0,0,0.2)';"
+               onblur="this.style.borderColor='#ddd'; this.style.boxShadow='none';">
+        <input type="text" name="address" placeholder="Відділення Нової Пошти/Укр.Пошти" required
+               style="padding:14px; border-radius:12px; border:1px solid #ddd; font-size:16px; transition:0.3s; width:100%;"
+               onfocus="this.style.borderColor='#b30000'; this.style.boxShadow='0 0 10px rgba(179,0,0,0.2)';"
+               onblur="this.style.borderColor='#ddd'; this.style.boxShadow='none';">
+        <input type="text" name="address" placeholder="Оплата: Онлайн/Готівка" required
+               style="padding:14px; border-radius:12px; border:1px solid #ddd; font-size:16px; transition:0.3s; width:100%;"
+               onfocus="this.style.borderColor='#b30000'; this.style.boxShadow='0 0 10px rgba(179,0,0,0.2)';"
+               onblur="this.style.borderColor='#ddd'; this.style.boxShadow='none';">
+        <input type="text" name="address" placeholder="Промокод на знижку" required
+               style="padding:14px; border-radius:12px; border:1px solid #ddd; font-size:16px; transition:0.3s; width:100%;"
+               onfocus="this.style.borderColor='#b30000'; this.style.boxShadow='0 0 10px rgba(179,0,0,0.2)';"
+               onblur="this.style.borderColor='#ddd'; this.style.boxShadow='none';">
+
+        <!-- Кнопка підтвердження -->
+        <button type="submit"
+                style="padding:15px; background-color:#b30000; color:white; border:none; border-radius:50px; font-size:16px; font-weight:bold; cursor:pointer; transition:0.3s transform ease, 0.3s box-shadow ease;"
+                onmouseover="this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 10px 25px rgba(255,0,0,0.3)';"
+                onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 6px 15px rgba(0,0,0,0.1)';"
+                onmousedown="this.style.transform='scale(0.98)';"
+                onmouseup="this.style.transform='scale(1.05)';">
+            Підтвердити замовлення
+        </button>
+    </form>
+
+    <!-- Кнопки навігації -->
+    <div style="margin-top:30px; display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
+        <a href="{% url 'cart' %}"
+           style="padding:12px 25px; border-radius:50px; font-weight:bold; text-decoration:none; color:#b30000; border:2px solid #b30000; transition:0.3s;"
+           onmouseover="this.style.backgroundColor='#b30000'; this.style.color='white'; this.style.transform='translateY(-2px)';"
+           onmouseout="this.style.backgroundColor='white'; this.style.color='#b30000'; this.style.transform='translateY(0)';">
+            Повернутись до кошика
+        </a>
+        <a href="{% url 'katalog' %}"
+           style="padding:12px 25px; border-radius:50px; font-weight:bold; text-decoration:none; color:white; background-color:#b30000; transition:0.3s;"
+           onmouseover="this.style.backgroundColor='#ff0000'; this.style.transform='translateY(-2px)';"
+           onmouseout="this.style.backgroundColor='#b30000'; this.style.transform='translateY(0)';">
+            Продовжити покупки
+        </a>
+    </div>
+</section>
+{% endblock %}

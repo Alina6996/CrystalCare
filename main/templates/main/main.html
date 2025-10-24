@@ -1,0 +1,54 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="hero">
+    <!-- Заголовок над пошуковою строкою -->
+    <div class="hero-text" style="text-align: center; margin-bottom: 40px; margin-top: 60px;">
+        <h1>Ласкаво просимо до <span class="highlight">Crystal Care</span></h1>
+    </div>
+
+    <!-- Пошукова строка -->
+    <div class="search-bar-hero">
+        <form method="GET" action="{% url 'katalog' %}">
+            <input type="text" name="q" placeholder="Шукати косметику..." required>
+            <button type="submit">Пошук</button>
+        </form>
+    </div>
+
+    <!-- Flex-контейнер: фото зліва, відео справа -->
+    <div class="hero-flex-container">
+        <img src="/media/products/main.jpg" alt="Crystal Care" class="hero-main-img">
+        <video class="hero-side-video" autoplay muted loop playsinline>
+            <source src="{% static 'videos/cosmeticsAtMain.mp4' %}" type="video/mp4">
+            Ваш браузер не підтримує відео.
+        </video>
+    </div>
+</section>
+
+<!-- Features -->
+<section class="features">
+    <h2>Чому нас обирають</h2>
+    <div class="feature-cards">
+        <div class="feature-card">
+            <h3>Висока якість</h3>
+            <p>Тільки перевірені бренди, безпечні для шкіри та довготривалого використання.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Широкий вибір</h3>
+            <p>Помади, туш, рум’яна, хайлайтери, тональні основи та багато іншого.</p>
+        </div>
+        <div class="feature-card">
+            <h3>Зручна доставка</h3>
+            <p>Швидка доставка по всій Україні.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Promo -->
+<section class="promo">
+    <h2>Наші новинки</h2>
+    <p>Будьте першими, хто відкриє для себе тренди сезону!</p>
+    <a href="{% url 'katalog' %}" class="btn">Переглянути новинки</a>
+</section>
+{% endblock %}

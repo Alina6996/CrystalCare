@@ -1,0 +1,36 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="product-detail-wrapper">
+    <!-- Ліва колонка: основне фото + свотчі -->
+    <div class="product-images">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="main-product-img">
+        {% if product.images.all %}
+        <div class="swatches">
+            {% for img in product.images.all %}
+            <img src="{{ img.image.url }}" alt="{{ img.alt_text }}" class="swatch-img">
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Права колонка: інформація про товар -->
+    <div class="product-info">
+        <h1>{{ product.name }}</h1>
+        <p class="price">Ціна: {{ product.price }} грн</p>
+
+        <h2>Опис продукту</h2>
+        <p>{{ product.description }}</p>
+
+        <h2>Склад</h2>
+        <p>{{ product.ingredients }}</p>
+
+        <h3>Спосіб використання</h3>
+        <p>{{ product.usage_instructions }}</p>
+
+
+        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-add-cart">Додати у кошик</a>
+    </div>
+</section>
+{% endblock %}

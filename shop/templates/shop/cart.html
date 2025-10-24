@@ -1,0 +1,62 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="cart-section" style="padding:40px 20px; max-width:1000px; margin:0 auto; font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+
+    <h1 style="text-align:center; margin-bottom:40px; color:#b30000; font-weight:bold;">Ваш кошик</h1>
+
+    {% if cart_items %}
+    <table style="width:100%; border-collapse:collapse; box-shadow:0 6px 15px rgba(0,0,0,0.08); border-radius:12px; overflow:hidden;">
+        <thead>
+            <tr style="background-color:#b30000; color:#fff; font-weight:bold;">
+                <th style="padding:15px; text-align:left;">Фото</th>
+                <th style="padding:15px; text-align:left;">Товар</th>
+                <th style="padding:15px; text-align:right;">Ціна</th>
+                <th style="padding:15px; text-align:center;">Кількість</th>
+                <th style="padding:15px; text-align:right;">Всього</th>
+                <th style="padding:15px; text-align:center;">Дія</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in cart_items %}
+            <tr style="border-bottom:1px solid #eee;">
+                <td style="padding:10px;">
+                    <img src="{{ item.image }}" alt="{{ item.name }}" style="width:70px; border-radius:10px; object-fit:cover;">
+                </td>
+                <td style="padding:10px; color:#333;">{{ item.name }}</td>
+                <td style="padding:10px; text-align:right;">{{ item.price }} грн</td>
+                <td style="padding:10px; text-align:center;">
+                    <form method="POST" action="{% url 'update_cart' %}" style="display:flex; justify-content:center; align-items:center; gap:5px;">
+                        {% csrf_token %}
+                        <input type="hidden" name="index" value="{{ forloop.counter0 }}">
+                        <input type="number" name="quantity" value="{{ item.quantity }}" min="1" style="width:60px; text-align:center; border-radius:8px; border:1px solid #ccc; padding:6px;">
+                        <button type="submit" class="btn">Оновити</button>
+                    </form>
+                </td>
+                <td style="padding:10px; text-align:right;">{{ item.total_price }} грн</td>
+                <td style="padding:10px; text-align:center;">
+                    <a href="{% url 'remove_from_cart' forloop.counter0 %}" class="btn">Видалити</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <h3 style="text-align:right; margin-top:25px; color:#b30000; font-weight:bold;">Всього: {{ total_price }} грн</h3>
+
+    <div style="margin-top:30px; display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
+        <a href="{% url 'katalog' %}" class="btn">Продовжити покупки</a>
+        <a href="{% url 'clear_cart' %}" class="btn">Очистити кошик</a>
+        <a href="{% url 'checkout' %}" class="btn">Оформити замовлення</a>
+    </div>
+
+    {% else %}
+    <p style="text-align:center; font-size:18px; margin-top:30px; color:#555;">Ваш кошик порожній</p>
+    <div style="text-align:center; margin-top:20px;">
+        <a href="{% url 'katalog' %}" class="btn">Перейти до каталогу</a>
+    </div>
+    {% endif %}
+
+</section>
+{% endblock %}
