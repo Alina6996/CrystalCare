@@ -1,4 +1,7 @@
 import logging
+import os
+
 logging.basicConfig(level=logging.INFO)
 
-TELEGRAM_BOT_TOKEN = '7957511135:AAFlRY0Hb6_ztxtFCciTqLLoMy_P4_DmPRM'
+TELEGRAM_BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN")
+
