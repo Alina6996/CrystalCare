@@ -1,0 +1,22 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="auth-section" style="background-image: url('{% static 'icons/ФОНВхідРеєстрація.jpg' %}'); background-size: cover; background-position: center;">
+    <div class="auth-overlay" style="background-color: rgba(0,0,0,0.4); border-radius: 20px;"></div>
+    <div class="auth-card">
+        <h1>Реєстрація нового клієнта Crystal Care</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="username" placeholder="Ім’я користувача" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="tel" name="phone" placeholder="Номер телефону" required>
+            <input type="date" name="birth_date" required>
+            <input type="password" name="password1" placeholder="Пароль" required>
+            <input type="password" name="password2" placeholder="Повторіть пароль" required>
+            <button type="submit" class="btn">Зареєструватися</button>
+        </form>
+        <p>Вже маєте акаунт? <a href="{% url 'vhid' %}">Вхід</a></p>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,208 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="profile-hero">
+
+    <!-- Відео фон -->
+    <video class="profile-video-bg" autoplay muted loop playsinline>
+        <source src="{% static 'videos/videoAtKabinet.mp4' %}" type="video/mp4">
+        Ваш браузер не підтримує відео.
+    </video>
+
+    <!-- Контент поверх відео -->
+    <div class="profile-card">
+        <!-- Привітання -->
+        <div class="profile-header">
+            <h2>Вітаємо, {{ user.username }}!</h2>
+        </div>
+
+        <!-- Редагування даних профілю -->
+        <form method="POST">
+            {% csrf_token %}
+            <div class="profile-info">
+                <h3>Ваша особиста інформація</h3>
+                <label>ПІБ:</label>
+                <input type="text" name="full_name" value="{{ profile.full_name }}">
+
+                <label>Телефон:</label>
+                <input type="text" name="phone" value="{{ profile.phone }}">
+
+
+
+                <label>Дата народження:</label>
+                <input type="date" name="birth_date" value="{{ profile.birth_date|date:'Y-m-d' }}">
+
+
+                <label>Адреса доставки:</label>
+                <input type="text" name="address" value="{{ profile.address }}">
+
+                <label>Промокод:</label>
+                <input type="text" name="promo_code" value="{{ profile.promo_code }}">
+
+                <button type="submit" class="btn">Зберегти зміни</button>
+            </div>
+        </form>
+
+        <!-- Історія замовлень -->
+        <div class="profile-orders">
+            <h3>Мої замовлення</h3>
+            {% if orders %}
+            <ul class="orders-list">
+                {% for order in orders %}
+                <li class="order-group">
+                    <div class="order-header">
+                        <strong>Замовлення #{{ order.id }} - {{ order.created_at|date:"d.m.Y H:i" }}</strong>
+                        <span>Статус: {{ order.get_status_display }}</span>
+                        {% if order.status == 'active' %}
+                        <a href="{% url 'cancel_order' order.id %}" class="cancel-link">Скасувати</a>
+                        {% endif %}
+                    </div>
+                    <ul class="order-items">
+                        {% for item in order.items.all %}
+                        <li class="order-item">
+                            <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                            <div>
+                                <span>{{ item.product.name }}</span> |
+                                <span>x{{ item.quantity }}</span> |
+                                <span>{{ item.total_price }} грн</span>
+                            </div>
+                        </li>
+                        {% endfor %}
+                        <li class="order-total">
+                            <strong>Загальна сума: {{ order.total_price }} грн</strong>
+                        </li>
+                    </ul>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>У вас поки що немає замовлень.</p>
+            {% endif %}
+        </div>
+
+        <a href="{% url 'logout' %}" class="btn btn-logout">Вийти</a>
+    </div>
+</section>
+
+<!-- CSS для відеофону та стилів профілю -->
+<style>
+    .profile-hero {
+        position: relative;
+        width: 100%;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+        box-sizing: border-box;
+    }
+
+    .profile-video-bg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: translate(-50%, -50%);
+        z-index: 0;
+        filter: brightness(0.35); /* затемнює відео для кращого контрасту */
+    }
+
+    .profile-card {
+        position: relative;
+        z-index: 1;
+        background: rgba(0,0,0,0.45);
+        padding: 30px;
+        border-radius: 20px;
+        width: 100%;
+        max-width: 900px;
+        color: white;
+        box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+    }
+
+    .profile-card h2, .profile-card h3 {
+        margin-bottom: 15px;
+    }
+
+    .profile-info label {
+        display: block;
+        margin-top: 10px;
+        margin-bottom: 5px;
+    }
+
+    .profile-info input {
+        width: 100%;
+        padding: 8px;
+        border-radius: 8px;
+        border: none;
+        margin-bottom: 10px;
+    }
+
+    .btn, .btn-logout {
+        margin-top: 15px;
+        padding: 10px 25px;
+        border-radius: 12px;
+        border: none;
+        background: #b30000;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .order-group {
+        box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        border-radius: 15px;
+        padding: 15px;
+        margin-bottom: 15px;
+    }
+
+    .order-header {
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+    }
+
+    .cancel-link {
+        color:red;
+        margin-left: 15px;
+        text-decoration: none;
+    }
+
+    .order-item {
+        display:flex;
+        align-items:center;
+        gap:10px;
+        margin-bottom:5px;
+    }
+
+    .order-item img {
+        width:60px;
+        border-radius:8px;
+    }
+
+    .order-total {
+        text-align:right;
+        margin-top:5px;
+    }
+
+    /* Адаптивність */
+    @media (max-width: 768px) {
+        .profile-card {
+            padding: 20px;
+        }
+        .profile-info input {
+            width: 100%;
+        }
+        .order-item {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .order-item img {
+            width: 80px;
+            margin-bottom: 5px;
+        }
+    }
+</style>
+{% endblock %}
