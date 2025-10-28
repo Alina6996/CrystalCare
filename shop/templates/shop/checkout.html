@@ -1,0 +1,193 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<section
+    style="max-width:650px; margin:60px auto; padding:40px; background-color:#fff; border-radius:20px; box-shadow:0 10px 30px rgba(0,0,0,0.08); font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; text-align:center;">
+
+    <h1 style="color:#b30000; font-size:1.8rem; margin-bottom:15px;">Оформлення замовлення</h1>
+    <p style="font-size:1rem; color:#555; margin-bottom:10px;">
+        Загальна сума: <strong>{{ total_price }} грн</strong>
+    </p>
+
+    <!-- Повідомлення про помилку / оплату -->
+    <p id="errorMessage" style="display:none; color:#b30000; font-weight:bold; margin-bottom:10px;"></p>
+    <p id="paymentMessage" style="display:none; color:green; font-weight:bold; margin-bottom:20px;">
+        <span id="paymentText">Оплата йде, зачекайте...</span>
+    </p>
+
+    <!-- Форма замовлення -->
+    <form method="POST" id="checkoutForm" style="display:flex; flex-direction:column; gap:14px;">
+        {% csrf_token %}
+        <input type="text" name="name" placeholder="Ім'я та прізвище отримувача" required
+               style="padding:14px; border-radius:12px; border:1px solid #ddd; font-size:16px; width:100%;">
+
+        <input type="tel" name="phone" placeholder="Телефон" required
+               style="padding:14px; border-radius:12px; border:1px solid #ddd; font-size:16px; width:100%;">
+
+        <input type="text" name="city" placeholder="Місто" required
+               style="padding:14px; border-radius:12px; border:1px solid #ddd; font-size:16px; width:100%;">
+
+        <input type="text" name="department" placeholder="Відділення Нової Пошти/Укр.Пошти" required
+               style="padding:14px; border-radius:12px; border:1px solid #ddd; font-size:16px; width:100%;">
+
+        <!-- Вибір способу оплати -->
+        <label style="display:flex; gap:12px; align-items:center; justify-content:center;">
+            <input type="radio" name="payment_method" value="cash" checked> Оплата при отриманні
+            <input type="radio" name="payment_method" value="online" style="margin-left:15px;"> Онлайн карткою
+        </label>
+
+        <!-- Поля для картки (при оплаті онлайн) -->
+        <div id="cardFields" style="display:none; flex-direction:column; gap:10px; margin-top:6px;">
+            <input type="text" id="cardNumber" name="card_number" placeholder="Номер картки (1234 5678 9012 3456)"
+                   inputmode="numeric" autocomplete="cc-number"
+                   style="padding:12px; border-radius:10px; border:1px solid #ddd; font-size:16px; width:100%;">
+            <div style="display:flex; gap:10px;">
+                <input type="text" id="cardExpiry" name="card_expiry" placeholder="MM / YY" autocomplete="cc-exp"
+                       style="padding:12px; border-radius:10px; border:1px solid #ddd; font-size:16px; width:50%;">
+                <input type="text" id="cardCvv" name="card_cvv" placeholder="CVV" inputmode="numeric" autocomplete="cc-csc"
+                       style="padding:12px; border-radius:10px; border:1px solid #ddd; font-size:16px; width:50%;">
+            </div>
+            <small style="color:#777; display:block; text-align:left;">Це симуляція — не вводь реальні дані картки у тестовому середовищі.</small>
+        </div>
+
+        <input type="text" name="promo_code" placeholder="Промокод на знижку (необов'язково)"
+               style="padding:14px; border-radius:12px; border:1px solid #ddd; font-size:16px; width:100%;">
+
+        <!-- Кнопка підтвердження з анімаціями -->
+        <button type="submit" id="checkoutButton"
+                style="padding:15px; background-color:#b30000; color:white; border:none; border-radius:50px; font-size:16px; font-weight:bold; cursor:pointer; transition:0.3s transform ease, 0.3s box-shadow ease;"
+                onmouseover="this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 10px 25px rgba(255,0,0,0.3)';"
+                onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 6px 15px rgba(0,0,0,0.1)';"
+                onmousedown="this.style.transform='scale(0.98)';"
+                onmouseup="this.style.transform='scale(1.05)';">
+            Підтвердити замовлення
+        </button>
+    </form>
+
+    <!-- Кнопки повернення та покупки з анімаціями -->
+    <div style="margin-top:26px; display:flex; justify-content:center; gap:15px; flex-wrap:wrap;">
+        <a href="{% url 'cart' %}"
+           style="padding:12px 25px; border-radius:50px; font-weight:bold; text-decoration:none; color:#b30000; border:2px solid #b30000; transition:0.3s transform ease, 0.3s box-shadow ease;"
+           onmouseover="this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 10px 25px rgba(179,0,0,0.3)';"
+           onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 6px 15px rgba(0,0,0,0.1)';"
+           onmousedown="this.style.transform='scale(0.98)';"
+           onmouseup="this.style.transform='scale(1.05)';">
+           Повернутись до кошика
+        </a>
+        <a href="{% url 'katalog' %}"
+           style="padding:12px 25px; border-radius:50px; font-weight:bold; text-decoration:none; color:white; background-color:#b30000; transition:0.3s transform ease, 0.3s box-shadow ease;"
+           onmouseover="this.style.transform='translateY(-3px) scale(1.05)'; this.style.boxShadow='0 10px 25px rgba(255,0,0,0.3)';"
+           onmouseout="this.style.transform='translateY(0) scale(1)'; this.style.boxShadow='0 6px 15px rgba(0,0,0,0.1)';"
+           onmousedown="this.style.transform='scale(0.98)';"
+           onmouseup="this.style.transform='scale(1.05)';">
+           Продовжити покупки
+        </a>
+    </div>
+</section>
+
+<script>
+// --- Невелика утиліта Luhn для перевірки номера картки ---
+function luhnCheck(cardNumber) {
+    const s = cardNumber.replace(/\D/g, '');
+    let sum = 0, alt = false;
+    for (let i = s.length - 1; i >= 0; i--) {
+        let n = parseInt(s.charAt(i), 10);
+        if (alt) {
+            n *= 2;
+            if (n > 9) n -= 9;
+        }
+        sum += n;
+        alt = !alt;
+    }
+    return (sum % 10) === 0;
+}
+
+function maskCard(number) {
+    const s = number.replace(/\D/g, '');
+    if (s.length < 4) return '****';
+    return '**** **** **** ' + s.slice(-4);
+}
+
+// Показувати/ховати поля картки в залежності від вибору способу оплати
+document.querySelectorAll('input[name="payment_method"]').forEach(r => {
+    r.addEventListener('change', () => {
+        const cardDiv = document.getElementById('cardFields');
+        if (document.querySelector('input[name="payment_method"]:checked').value === 'online') {
+            cardDiv.style.display = 'flex';
+        } else {
+            cardDiv.style.display = 'none';
+        }
+    });
+});
+
+// Обробка submit - клієнтська валідація та імітація оплати
+document.getElementById('checkoutForm').addEventListener('submit', function(e) {
+    const paymentMethod = document.querySelector('input[name="payment_method"]:checked').value;
+    const errorEl = document.getElementById('errorMessage');
+    const paymentEl = document.getElementById('paymentMessage');
+    const paymentText = document.getElementById('paymentText');
+    errorEl.style.display = 'none';
+    errorEl.textContent = '';
+
+    // Якщо онлайн — перевіряємо картку
+    if (paymentMethod === 'online') {
+        const cardNum = document.getElementById('cardNumber').value.trim();
+        const expiry = document.getElementById('cardExpiry').value.trim();
+        const cvv = document.getElementById('cardCvv').value.trim();
+
+        // Простенькі перевірки
+        if (!/^\d{12,19}$/.test(cardNum.replace(/\s/g, ''))) {
+            if (!luhnCheck(cardNum)) {
+                e.preventDefault();
+                errorEl.textContent = 'Неправильний номер картки (перевірте та спробуйте ще раз).';
+                errorEl.style.display = 'block';
+                return;
+            }
+        }
+        if (!/^\d{2}\s*\/\s*\d{2}$/.test(expiry)) {
+            e.preventDefault();
+            errorEl.textContent = 'Введіть термін у форматі MM / YY.';
+            errorEl.style.display = 'block';
+            return;
+        } else {
+            const parts = expiry.split('/');
+            const mm = parseInt(parts[0].trim(), 10);
+            const yy = parseInt(parts[1].trim(), 10) + 2000;
+            const now = new Date();
+            const exp = new Date(yy, mm);
+            if (isNaN(mm) || mm < 1 || mm > 12 || exp <= now) {
+                e.preventDefault();
+                errorEl.textContent = 'Термін картки недійсний або минув.';
+                errorEl.style.display = 'block';
+                return;
+            }
+        }
+        if (!/^\d{3,4}$/.test(cvv)) {
+            e.preventDefault();
+            errorEl.textContent = 'Неправильний CVV.';
+            errorEl.style.display = 'block';
+            return;
+        }
+    }
+
+    e.preventDefault(); // тимчасово зупиняємо реальну відправку
+    const btn = document.getElementById('checkoutButton');
+    btn.disabled = true;
+    document.getElementById('errorMessage').style.display = 'none';
+
+    if (paymentMethod === 'online') {
+        const masked = maskCard(document.getElementById('cardNumber').value || '');
+        paymentText.textContent = 'Оплата карткою ' + masked + ' — обробляється...';
+    } else {
+        paymentText.textContent = 'Оплата при отриманні — обробляється...';
+    }
+
+    paymentEl.style.display = 'block';
+
+    setTimeout(() => {
+        document.getElementById('checkoutForm').submit();
+    }, 5000);
+});
+</script>
+{% endblock %}

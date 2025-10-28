@@ -1,0 +1,107 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="product-detail-wrapper">
+    <!-- Ліва колонка: основне фото + свотчі -->
+    <div class="product-images">
+        <img src="{{ product.image.url }}" alt="{{ product.name }}" class="main-product-img">
+        {% if product.images.all %}
+        <div class="swatches">
+            {% for img in product.images.all %}
+            <img src="{{ img.image.url }}" alt="{{ img.alt_text }}" class="swatch-img">
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Права колонка: інформація про товар -->
+    <div class="product-info">
+        <h1>{{ product.name }}</h1>
+        <p class="price">Ціна: {{ product.price }} грн</p>
+
+        <h2>Опис продукту</h2>
+        <p>{{ product.description }}</p>
+
+        <h2>Склад</h2>
+        <p>{{ product.ingredients }}</p>
+
+        <h3>Спосіб використання</h3>
+        <p>{{ product.usage_instructions }}</p>
+
+
+        <a href="{% url 'add_to_cart' product.id %}" class="btn btn-add-cart">Додати у кошик</a>
+    </div>
+</section>
+<!-- Відкриття збільшеного фото при натиску на свотчі -->
+<div id="imageModal" class="image-modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modalImage">
+</div>
+
+<style>
+.image-modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.8);
+}
+
+.image-modal img {
+  margin: auto;
+  display: block;
+  max-width: 90%;
+  max-height: 80vh;
+  transition: transform 0.25s ease;
+  cursor: zoom-in;
+}
+
+.image-modal .close {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  color: #fff;
+  font-size: 40px;
+  cursor: pointer;
+}
+</style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const modal = document.getElementById("imageModal");
+  const modalImg = document.getElementById("modalImage");
+  const close = document.querySelector(".close");
+  let scale = 1;
+
+  document.querySelectorAll(".swatch-img, .main-product-img").forEach(img => {
+    img.addEventListener("click", function() {
+      modal.style.display = "block";
+      modalImg.src = this.src;
+      scale = 1;
+      modalImg.style.transform = `scale(${scale})`;
+    });
+  });
+
+  close.onclick = function() {
+    modal.style.display = "none";
+  };
+
+  modal.onclick = function(e) {
+    if (e.target === modal) modal.style.display = "none";
+  };
+
+  modalImg.addEventListener("wheel", function(e) {
+    e.preventDefault();
+    scale += e.deltaY * -0.001;
+    scale = Math.min(Math.max(1, scale), 3);
+    modalImg.style.transform = `scale(${scale})`;
+  });
+});
+</script>
+{% endblock %}
