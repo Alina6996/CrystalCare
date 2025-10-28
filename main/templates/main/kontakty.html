@@ -1,0 +1,141 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="contacts" style="background-image: url('/media/products/Kontakty.jpg'); min-height: 100vh;">
+    <div class="contacts-overlay">
+        <div class="contacts-text">
+            <h1 style="color:#b30000;">Зв'яжіться з нами</h1>
+            <p class="subtitle" style="color:#b30000;">Ми завжди відкриті для ваших запитань та пропозицій</p>
+        </div>
+
+        <div class="contacts-wrapper">
+            <div class="contact-info">
+                <div class="contact-card">
+                    <h3 style="color:#b30000;">Наша адреса</h3>
+                    <p>м. Харків, вул. Центральна, 5</p>
+                </div>
+
+                <div class="contact-card">
+                    <h3 style="color:#b30000;">Телефон</h3>
+                    <p><a href="tel:+380991234567" style="color:#b30000;">+38 (096) 123 23 32</a></p>
+                </div>
+
+                <div class="contact-card">
+                    <h3 style="color:#b30000;">Email</h3>
+                    <p><a href="mailto:info@crystalcare.com" style="color:#b30000;">info@crystalcare.com.ua</a></p>
+                </div>
+
+                <div class="contact-card">
+                    <h3 style="color:#b30000;">Години роботи</h3>
+                    <p>Пн-Пт: 9:00 - 18:00</p>
+                    <p>Сб-Нд: вихідний</p>
+                </div>
+
+                <div class="contact-card social-links">
+                    <h3 style="color:#b30000;">Ми в соцмережах:</h3>
+                    <a href="#"><img src="{% static 'icons/facebook.png' %}" alt="Facebook"></a>
+                    <a href="#"><img src="{% static 'icons/instagram.png' %}" alt="Instagram"></a>
+                    <a href="#"><img src="{% static 'icons/telegram.png' %}" alt="Telegram"></a>
+                </div>
+            </div>
+
+            <form class="contact-form">
+                <h2 style="color:#b30000;">Напишіть нам</h2>
+                <input type="text" placeholder="Ваше ім’я" required>
+                <input type="email" placeholder="Ваш Email" required>
+                <input type="text" placeholder="Тема повідомлення" required>
+                <textarea rows="7" placeholder="Ваше повідомлення"></textarea>
+                <button type="submit" class="btn">Відправити</button>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="about-contact fade-in">
+    <h2 style="color:#b30000;">Про нашу компанію</h2>
+    <p>CrystalCare — це компанія з багаторічним досвідом у сфері догляду за шкірою. Ми дбаємо про якість наших продуктів та завжди готові відповісти на ваші питання.</p>
+</section>
+
+<section class="faq fade-in">
+    <h2 style="color:#b30000;">Часті питання</h2>
+    <div class="faq-item">
+        <h3 class="faq-question">Як зробити замовлення?</h3>
+        <p class="faq-answer">Ви можете замовити онлайн через наш сайт або зв’язатися з нами по телефону.</p>
+    </div>
+    <div class="faq-item">
+        <h3 class="faq-question">Які способи оплати доступні?</h3>
+        <p class="faq-answer">Оплата карткою або готівкою при отриманні.</p>
+    </div>
+    <div class="faq-item">
+        <h3 class="faq-question">Чи можна повернути товар?</h3>
+        <p class="faq-answer">Так, повернення можливе протягом 14 днів за умови збереження упаковки.</p>
+    </div>
+</section>
+
+<section class="map-section fade-in">
+    <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2564.123456789!2d36.230000!3d50.000000!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4127a0f123456789%3A0xabcdef123456789!2z0JrQsNGA0LDRgtC10YHQutCw0Y8!5e0!3m2!1suk!2sua!4v1698073600000!5m2!1suk!2sua"
+        width="100%" height="400" style="border:0; border-radius:10px; box-shadow:0 5px 20px rgba(0,0,0,0.3);" allowfullscreen="" loading="lazy">
+    </iframe>
+</section>
+
+<style>
+/* Соцмережі */
+.social-links img { width: 30px; margin-right: 10px; transition: transform 0.3s; }
+.social-links img:hover { transform: scale(1.2); }
+
+/* Контакти і форма */
+.contacts-wrapper { display: flex; flex-wrap: wrap; gap: 50px; }
+.contact-info, .contact-form { flex: 1 1 400px; }
+.contact-card { margin-bottom: 25px; transition: transform 0.2s; }
+.contact-card:hover { transform: translateY(-3px); }
+.contact-form input, .contact-form textarea { width: 100%; padding: 10px; margin-bottom: 15px; border-radius: 5px; border: none; }
+
+/* Кнопка */
+.btn { padding: 12px 30px; font-size:16px; cursor:pointer; background-color: #b30000; border: none; border-radius:5px; color:white; transition: background 0.3s, transform 0.2s; }
+.btn:hover { background-color: #ff0000; transform: scale(1.05); }
+
+/* Про компанію и FAQ */
+.about-contact, .faq { padding: 50px 20px; max-width: 900px; margin: 0 auto; }
+.faq-item { margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 10px; cursor: pointer; transition: background 0.3s; }
+.faq-item:hover { background: rgba(179, 0, 0, 0.05); }
+
+.faq-question { color: #b30000; font-weight: bold; margin-bottom: 5px; transition: color 0.3s; }
+.faq-question:hover { color: #ff0000; }
+.faq-answer { max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease; color: #b30000; }
+
+/* Карта */
+.map-section { padding: 30px 20px 50px; max-width: 1000px; margin: 20px auto 50px; }
+
+.fade-in { opacity: 0; transform: translateY(30px); transition: all 0.8s ease; }
+.fade-in.show { opacity: 1; transform: translateY(0); }
+</style>
+
+<script>
+document.querySelectorAll('.faq-item').forEach(item => {
+    const question = item.querySelector('.faq-question');
+    const answer = item.querySelector('.faq-answer');
+    question.addEventListener('click', () => {
+        if(answer.style.maxHeight){
+            answer.style.maxHeight = null;
+            answer.style.paddingTop = '0';
+            answer.style.paddingBottom = '0';
+        } else {
+            answer.style.maxHeight = answer.scrollHeight + 'px';
+            answer.style.paddingTop = '10px';
+            answer.style.paddingBottom = '10px';
+        }
+    });
+});
+
+const faders = document.querySelectorAll('.fade-in');
+window.addEventListener('scroll', () => {
+    const triggerBottom = window.innerHeight * 0.85;
+    faders.forEach(fader => {
+        const faderTop = fader.getBoundingClientRect().top;
+        if(faderTop < triggerBottom) fader.classList.add('show');
+    });
+});
+</script>
+{% endblock %}

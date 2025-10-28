@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crystal Care</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* --- Floating Cart --- */
+        #floating-cart { position: fixed; top: 20px; right: 20px; z-index: 9999; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        #cart-toggle { background-color: #b30000; color: white; border: none; padding: 12px 18px; border-radius: 50px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        #cart-toggle:hover { background-color: #ff0000; }
+        #cart-dropdown { display: none; position: absolute; right: 0; top: 50px; width: 400px; background: white; border: 1px solid #ddd; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.15); padding: 15px; max-height: 500px; overflow-y: auto; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-20px);} to { opacity: 1; transform: translateY(0);} }
+        #cart-dropdown ul { list-style: none; padding: 0; margin: 0; }
+        #cart-dropdown li { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+        #cart-dropdown img { width: 50px; border-radius: 8px; margin-right: 10px; }
+        .item-info { flex-grow: 1; display: flex; align-items: center; justify-content: space-between; gap: 5px; }
+        .item-name { font-weight: bold; max-width: 120px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .item-price { font-size: 0.9em; color: #555; }
+        .qty-controls { display: flex; align-items: center; gap: 3px; }
+        .qty-input { width: 50px; text-align: center; border: 1px solid #ddd; border-radius: 5px; padding: 3px; }
+        .qty-btn { background-color: #b30000; color: white; border: none; padding: 3px 6px; border-radius: 5px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .qty-btn:hover { background-color: #ff0000; }
+        .remove-btn { color: #b30000; font-weight: bold; text-decoration: none; font-size: 20px; margin-left: 5px; }
+        .total { font-weight: bold; margin-top: 10px; text-align: right; }
+        .cart-actions { display: flex; justify-content: space-between; margin-top: 10px; gap: 5px; }
+        .checkout-btn { display: block; text-align: center; background-color: #b30000; color: white; padding: 10px; border-radius: 50px; text-decoration: none; font-weight: bold; flex: 1; transition: 0.3s; }
+        .checkout-btn:hover { background-color: #ff0000; }
+        .clear-btn { display: block; text-align: center; background-color: white; color: #b30000; border: 1px solid #b30000; padding: 10px; border-radius: 50px; text-decoration: none; font-weight: bold; flex: 1; transition: 0.3s; }
+        .clear-btn:hover { background-color: #b30000; color: white; }
+        @media (max-width: 480px) {
+            #cart-dropdown { width: 90vw; right: 5vw; }
+            #cart-dropdown img { width: 40px; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="{% url 'main' %}">Головна</a> |
+            <a href="{% url 'pro_nas' %}">Про нас</a> |
+            <a href="{% url 'kontakty' %}">Контакти</a> |
+            <a href="{% url 'katalog' %}">Магазин</a> |
+            <a href="{% url 'vhid' %}">Вхід</a>
+        </nav>
+    </header>
+
+<!-- Пошук + кошик -->
+<div style="position: absolute; top: 90px; right: 10px; display: flex; align-items: center; gap: 10px; z-index: 999;">
+
+<!-- Пошукова форма -->
+<div class="search-bar-hero" style="margin: 0; max-width: 290px;">
+<form method="GET" action="{% url 'katalog' %}">
+    <input type="text" name="q" placeholder="Пошук..." style="padding: 6px 8px; width: 120px; border-radius: 5px; border: 1px solid #ddd;">
+    <button type="submit" style="padding: 6px 10px; background-color: #b30000; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold;">
+        🔍 Знайти
+    </button>
+</form>
+
+</div>
+
+    <!-- Кнопка кошика -->
+    <div id="floating-cart">
+        <button id="cart-toggle">
+            🛒 Кошик (<span id="cart-count">{{ cart_items|length }}</span>)
+        </button>
+        <div id="cart-dropdown">
+            <ul id="cart-list">
+                {% for item in cart_items %}
+                <li data-index="{{ forloop.counter0 }}">
+                    <img src="{{ item.image }}" alt="{{ item.name }}">
+                    <div class="item-info">
+                        <span class="item-name">{{ item.name }}</span>
+                        <div class="qty-controls">
+                            <button class="qty-btn decrease">−</button>
+                            <input type="number" class="qty-input" value="{{ item.quantity }}" min="1">
+                            <button class="qty-btn increase">+</button>
+                        </div>
+                        <span class="item-price">{{ item.total_price }} грн</span>
+                        <a href="{% url 'remove_from_cart' forloop.counter0 %}" class="remove-btn">×</a>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            <p class="total">Всього: <span id="cart-total">{{ total_price }}</span> грн</p>
+            <div class="cart-actions">
+                <a href="{% url 'cart' %}" class="checkout-btn">Переглянути кошик</a>
+                <a href="{% url 'clear_cart' %}" class="clear-btn">Очистити кошик</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Crystal Care. Всі права захищені.</p>
+    </footer>
+
+    <script>
+        const cartToggle = document.getElementById('cart-toggle');
+        const cartDropdown = document.getElementById('cart-dropdown');
+
+        cartToggle.addEventListener('click', () => {
+            cartDropdown.style.display = cartDropdown.style.display === 'block' ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', function(event) {
+            if (!cartToggle.contains(event.target) && !cartDropdown.contains(event.target)) {
+                cartDropdown.style.display = 'none';
+            }
+        });
+
+        const csrftoken = '{{ csrf_token }}';
+        const updateQty = async (index, quantity) => {
+            const response = await fetch("{% url 'update_cart' %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({ index, quantity })
+            });
+            const data = await response.json();
+            if(data.success) {
+                document.getElementById('cart-count').innerText = data.cart_count;
+                document.getElementById('cart-total').innerText = data.total_price;
+                const itemPrice = document.querySelector(`#cart-list li[data-index="${index}"] .item-price`);
+                itemPrice.innerText = data.item_total;
+            }
+        };
+
+        document.querySelectorAll('.increase').forEach(btn => {
+            btn.addEventListener('click', e => {
+                const li = e.target.closest('li');
+                const index = li.dataset.index;
+                const input = li.querySelector('.qty-input');
+                input.value = parseInt(input.value) + 1;
+                updateQty(index, parseInt(input.value));
+            });
+        });
+
+        document.querySelectorAll('.decrease').forEach(btn => {
+            btn.addEventListener('click', e => {
+                const li = e.target.closest('li');
+                const index = li.dataset.index;
+                const input = li.querySelector('.qty-input');
+                if(parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
+                updateQty(index, parseInt(input.value));
+            });
+        });
+
+        document.querySelectorAll('.qty-input').forEach(input => {
+            input.addEventListener('change', e => {
+                const li = e.target.closest('li');
+                const index = li.dataset.index;
+                let val = parseInt(input.value);
+                if(val < 1) val = 1;
+                input.value = val;
+                updateQty(index, val);
+            });
+        });
+    </script>
+</body>
+</html>

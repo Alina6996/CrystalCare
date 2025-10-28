@@ -1,0 +1,22 @@
+{% extends "main/base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="auth-section" style="background-image: url('{% static 'icons/ФОНВхідРеєстрація.jpg' %}'); background-size: cover; background-position: center;">
+    <div class="auth-overlay" style="background-color: rgba(0,0,0,0.4); border-radius: 20px;"></div>
+    <div class="auth-card">
+        <h1>Вхід до вашого кабінету</h1>
+        <form method="POST">
+            {% csrf_token %}
+            <div class="input-wrapper" style="position: relative; margin-bottom: 15px;">
+                <input type="text" name="username" placeholder="Ім’я користувача" required>
+            </div>
+            <div class="input-wrapper" style="position: relative; margin-bottom: 15px;">
+                <input type="password" name="password1" placeholder="Пароль" required>
+            </div>
+            <button type="submit">Увійти</button>
+        </form>
+        <p>Ще нема акаунту? <a href="{% url 'registraciya' %}">Зареєструватися</a></p>
+    </div>
+</section>
+{% endblock %}
